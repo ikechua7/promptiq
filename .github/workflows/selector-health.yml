@@ -1,0 +1,37 @@
+name: Claude.ai Selector Health Check
+
+on:
+  schedule:
+    - cron: "0 9 * * 1"   # Every Monday 9am UTC
+  workflow_dispatch:        # Manual trigger from GitHub UI
+
+jobs:
+  health-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+        working-directory: apps/extension
+
+      - name: Write auth state from secret
+        run: echo '${{ secrets.CLAUDE_AUTH_JSON }}' > apps/extension/auth.json
+
+      - name: Run selector health check
+        run: npx playwright test tests/selector-health.spec.ts
+        working-directory: apps/extension
+
+      - name: Upload report on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: apps/extension/playwright-report/

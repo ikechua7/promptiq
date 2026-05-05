@@ -1,0 +1,60 @@
+PROMPTIQ — BETA INSTALL GUIDE
+==============================
+
+REQUIREMENTS: Google Chrome (or any Chromium browser: Brave, Arc, Edge)
+
+INSTALL STEPS
+-------------
+1. Unzip this folder somewhere permanent (e.g. Desktop or Documents).
+   Do NOT delete it after installing — Chrome loads the extension live from this folder.
+
+2. Open Chrome and go to:
+      chrome://extensions
+
+3. Turn on "Developer mode" using the toggle in the TOP RIGHT corner.
+
+4. Click "Load unpacked" (top left).
+
+5. Select the "dist" folder inside this unzipped folder.
+
+6. Done. PromptIQ is now installed.
+
+HOW TO USE
+----------
+1. Go to https://claude.ai or https://chatgpt.com
+2. Start typing in the message input box
+3. A small score badge (e.g. "● 78 B") appears in the bottom-right corner of the screen
+4. Click the badge to open the score panel:
+   - See which prompt framework was auto-detected
+   - Check which elements are present (✓) or missing (✗)
+   - Follow the suggestions to improve your prompt
+5. Switch frameworks using the dropdown to score against a different standard
+
+SUPPORTED SITES
+---------------
+✓ claude.ai
+✓ chatgpt.com
+✓ gemini.google.com
+
+SCORE GUIDE
+-----------
+  A (85-100) — Strong prompt, ready to send
+  B (70-84)  — Good, minor improvements possible
+  C (55-69)  — Usable but missing key elements
+  D (40-54)  — Significant gaps
+  F (0-39)   — Needs major rework
+
+FRAMEWORKS SUPPORTED
+--------------------
+COSTAR · RTF · RISEN · CRISPE · APE · CARE · TAG · BROKE
+
+TROUBLESHOOTING
+---------------
+- Badge not showing? Type at least a few words first — it only appears when text is detected.
+- Score not updating? Wait 1-2 seconds after typing; it debounces to avoid lag.
+- Extension disappeared? Go to chrome://extensions and check it's still enabled.
+- Claude.ai updated and broke it? Let us know — we'll push a fix.
+
+FEEDBACK
+--------
+Found a bug or a prompt that scores wrong? Send the prompt + the score you got to usepromptiq.com or DM on Facebook.

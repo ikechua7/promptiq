@@ -1,0 +1,4 @@
+node_modules/
+dist/
+apps/extension/auth.json
+*.pem
