@@ -3,7 +3,10 @@
   "name": "PromptIQ",
   "version": "0.0.1",
   "description": "Score your prompts against 8 frameworks before submitting to any AI platform.",
-  "permissions": ["storage", "activeTab"],
+  "permissions": ["storage"],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'none';"
+  },
   "host_permissions": [
     "https://claude.ai/*",
     "https://chatgpt.com/*",
