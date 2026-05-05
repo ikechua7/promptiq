@@ -2,6 +2,8 @@
 
 Score your AI prompts before you send them.
 
+![PromptIQ scoring a strong prompt with 94/A on COSTAR framework](assets/screenshot.png)
+
 PromptIQ is a Chrome extension that analyzes your prompt in real time against 8 proven prompt engineering frameworks — and tells you exactly what's missing before you waste tokens on a bad response.
 
 ---
