@@ -64,7 +64,7 @@ const PANEL_STYLES = `
   .score-meta { display: flex; flex-direction: column; gap: 2px; }
   .grade { font-size: 14px; font-weight: 700; color: #9ca3af; }
   .intent { font-size: 11px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; }
-  .framework-desc { font-size: 11px; color: #6b7280; margin-top: 6px; line-height: 1.4; font-style: italic; }
+  .framework-desc { font-size: 12px; color: #d1d5db; line-height: 1.5; }
   .section { padding: 12px 14px; border-bottom: 1px solid #1f2937; }
   .section-label {
     font-size: 10px;
