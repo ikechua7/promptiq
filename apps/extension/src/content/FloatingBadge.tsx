@@ -48,17 +48,36 @@ export function FloatingBadge({ getText }: FloatingBadgeProps) {
   const [open, setOpen] = useState(false);
   const [framework, setFramework] = useState("auto");
   const lastTextRef = useRef<string>("");
+  const hasAutoOpenedRef = useRef(false);
 
   useEffect(() => {
-    // Poll every 300ms — more reliable than input events for ProseMirror/Tiptap
-    const interval = setInterval(() => {
+    function check() {
       const text = getText().trim();
-      if (text === lastTextRef.current) return; // no change
+      if (text === lastTextRef.current) return;
       lastTextRef.current = text;
-      if (!text) { setResult(null); return; }
+      if (!text) { setResult(null); hasAutoOpenedRef.current = false; return; }
+      if (!hasAutoOpenedRef.current) {
+        hasAutoOpenedRef.current = true;
+        setOpen(true);
+      }
       setResult(score(text, framework));
-    }, 300);
-    return () => clearInterval(interval);
+    }
+
+    // Poll every 300ms — catches paste, programmatic changes, SPA navigation
+    const interval = setInterval(check, 300);
+
+    // Force immediate recheck on these events — no debounce needed
+    document.addEventListener("input", check, true);
+    document.addEventListener("keyup", check, true);
+    document.addEventListener("paste", () => setTimeout(check, 50), true);
+    document.addEventListener("focusin", check, true);
+
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener("input", check, true);
+      document.removeEventListener("keyup", check, true);
+      document.removeEventListener("focusin", check, true);
+    };
   }, [getText, framework]);
 
   if (!result) return null;

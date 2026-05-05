@@ -3,12 +3,13 @@ import { FloatingBadge } from "./FloatingBadge.tsx";
 
 // Ordered by specificity — more specific selectors first, generic fallbacks last
 const SELECTORS: Array<{ sel: string; site: string }> = [
-  { sel: '[data-testid="chat-input"]',          site: "claude" },
-  { sel: ".tiptap.ProseMirror",                 site: "claude-fallback" },
-  { sel: "#prompt-textarea",                    site: "chatgpt" },
-  { sel: 'div[contenteditable="true"][role="textbox"]', site: "generic-rich" },
-  { sel: '[contenteditable="true"]',            site: "generic-ce" },
-  { sel: "textarea",                            site: "generic-textarea" },
+  { sel: '[data-testid="chat-input"]',                        site: "claude" },
+  { sel: ".tiptap.ProseMirror",                               site: "claude-fallback" },
+  { sel: "#prompt-textarea",                                  site: "chatgpt" },
+  { sel: ".ql-editor[contenteditable='true'][role='textbox']",site: "gemini" },
+  { sel: 'div[contenteditable="true"][role="textbox"]',       site: "generic-rich" },
+  { sel: '[contenteditable="true"]:not([tabindex="-1"])',     site: "generic-ce" },
+  { sel: "textarea",                                          site: "generic-textarea" },
 ];
 
 // Selectors that are too broad and would match non-input elements
