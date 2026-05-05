@@ -1,5 +1,16 @@
+import { useState } from "react";
 import { ALL_FRAMEWORKS } from "prompt-score";
 import type { PromptScore } from "prompt-score";
+
+const TASK_OPTIONS: Array<{ value: string; label: string; framework: string }> = [
+  { value: "auto",     label: "Auto-detect",          framework: "auto"   },
+  { value: "creative", label: "Content Writing",       framework: "costar" },
+  { value: "coding",   label: "Coding & Technical",   framework: "risen"  },
+  { value: "research", label: "Research & Analysis",  framework: "crispe" },
+  { value: "business", label: "Business & Strategy",  framework: "broke"  },
+  { value: "quick",    label: "Quick / One-liner",    framework: "rtf"    },
+  { value: "general",  label: "General Purpose",      framework: "costar" },
+];
 
 interface SidePanelProps {
   result: PromptScore;
@@ -110,10 +121,41 @@ const PANEL_STYLES = `
     width: 100%;
     margin-top: 4px;
   }
+  .task-bar {
+    padding: 10px 14px;
+    border-bottom: 1px solid #1f2937;
+    background: #0f172a;
+  }
+  .task-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6b7280;
+    margin-bottom: 5px;
+  }
+  .task-select {
+    background: #1e293b;
+    border: 1px solid #4f46e5;
+    border-radius: 6px;
+    color: #e5e7eb;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 8px;
+    width: 100%;
+    cursor: pointer;
+  }
 `;
 
 export function SidePanel({ result, framework, onFrameworkChange, onClose }: SidePanelProps) {
   const color = scoreColor(result.score);
+  const [selectedTask, setSelectedTask] = useState("auto");
+
+  function handleTaskChange(value: string) {
+    setSelectedTask(value);
+    const opt = TASK_OPTIONS.find((o) => o.value === value);
+    if (opt) onFrameworkChange(opt.framework);
+  }
 
   return (
     <>
@@ -122,6 +164,19 @@ export function SidePanel({ result, framework, onFrameworkChange, onClose }: Sid
         <div className="header">
           <span className="title">Prompt Scorer</span>
           <button className="close-btn" onClick={onClose}>×</button>
+        </div>
+
+        <div className="task-bar">
+          <div className="task-label">What are you working on?</div>
+          <select
+            className="task-select"
+            value={selectedTask}
+            onChange={(e) => handleTaskChange(e.target.value)}
+          >
+            {TASK_OPTIONS.map((o) => (
+              <option key={o.value} value={o.value}>{o.label}</option>
+            ))}
+          </select>
         </div>
 
         <div className="score-row">
