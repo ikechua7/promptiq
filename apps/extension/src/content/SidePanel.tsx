@@ -64,6 +64,7 @@ const PANEL_STYLES = `
   .score-meta { display: flex; flex-direction: column; gap: 2px; }
   .grade { font-size: 14px; font-weight: 700; color: #9ca3af; }
   .intent { font-size: 11px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; }
+  .framework-desc { font-size: 11px; color: #6b7280; margin-top: 6px; line-height: 1.4; font-style: italic; }
   .section { padding: 12px 14px; border-bottom: 1px solid #1f2937; }
   .section-label {
     font-size: 10px;
@@ -129,6 +130,9 @@ export function SidePanel({ result, framework, onFrameworkChange, onClose }: Sid
             <span className="grade">{result.grade} · {result.framework.name}</span>
             <span className="intent">intent: {result.intent}</span>
           </div>
+        </div>
+        <div style={{ padding: "8px 14px 12px", borderBottom: "1px solid #1f2937" }}>
+          <span className="framework-desc">{result.framework.description}</span>
         </div>
 
         <div className="section">
