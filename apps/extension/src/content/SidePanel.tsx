@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ALL_FRAMEWORKS } from "prompt-score";
-import type { PromptScore } from "prompt-score";
+import type { PromptScore, ElementScore } from "prompt-score";
 
 const TASK_OPTIONS: Array<{ value: string; label: string; framework: string }> = [
   { value: "auto",     label: "Auto-detect",          framework: "auto"   },
@@ -53,6 +53,66 @@ const PLACEHOLDERS: Record<string, { prefix?: string; suffix?: string }> = {
   narrowing:    { suffix: "Focus specifically on: [narrow the scope — what to include and exclude]." },
   constraint:   { suffix: "Constraints: [e.g. under 200 words / avoid jargon / no code examples]." },
 };
+
+// ── Platform adapters ────────────────────────────────────────────────────────
+
+function getVal(elements: ElementScore[], key: string, placeholder: string): string {
+  const el = elements.find((e) => e.key === key);
+  return el?.found && el.evidence ? el.evidence : placeholder;
+}
+
+function adaptForClaude(text: string, elements: ElementScore[]): string {
+  const role     = getVal(elements, "role",     "[your role, e.g. senior analyst]");
+  const context  = getVal(elements, "context",  "[background or situation]");
+  const audience = getVal(elements, "audience", "[target audience]");
+  const format   = getVal(elements, "format",   "[bullet points / report / table]");
+  const tone     = getVal(elements, "tone",     "[professional / conversational]");
+
+  return `<role>${role}</role>
+
+<context>
+${context}
+</context>
+
+<task>
+${text.trim()}
+</task>
+
+<audience>${audience}</audience>
+<format>${format}</format>
+<tone>${tone}</tone>`;
+}
+
+function adaptForChatGPT(text: string, elements: ElementScore[]): string {
+  const role     = getVal(elements, "role",     "[role, e.g. expert consultant]");
+  const audience = getVal(elements, "audience", "[target audience]");
+  const format   = getVal(elements, "format",   "[bullet points / paragraphs]");
+  const tone     = getVal(elements, "tone",     "[professional / casual]");
+  const goal     = getVal(elements, "goal",     "[describe the desired outcome]");
+
+  return `Act as a ${role}.
+
+**Task:** ${text.trim()}
+
+**Goal:** ${goal}
+**Audience:** ${audience}
+**Format:** ${format}
+**Tone:** ${tone}`;
+}
+
+function adaptForGemini(text: string, elements: ElementScore[]): string {
+  const roleEl   = elements.find((e) => e.key === "role");
+  const audience = getVal(elements, "audience", "[target audience]");
+  const format   = getVal(elements, "format",   "[bullet points / short paragraphs]");
+  const tone     = getVal(elements, "tone",     "[professional / conversational]");
+
+  let out = "";
+  if (roleEl?.found && roleEl.evidence) out += `You are ${roleEl.evidence}.\n\n`;
+  out += `${text.trim()}\n\nPlease ensure:\n- Written for ${audience}\n- Formatted as ${format}\n- Tone: ${tone}`;
+  return out;
+}
+
+// ── Prompt builder ───────────────────────────────────────────────────────────
 
 function buildImprovedPrompt(originalText: string, missingKeys: string[]): string {
   const prefixes: string[] = [];
@@ -228,12 +288,65 @@ const PANEL_STYLES = `
     font-weight: 600;
     text-align: center;
   }
+  .platform-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 6px;
+  }
+  .platform-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 4px;
+    border: 1px solid #374151;
+    border-radius: 8px;
+    background: #1f2937;
+    color: #e5e7eb;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: center;
+    line-height: 1.2;
+  }
+  .platform-btn:hover { border-color: #6b7280; background: #374151; }
+  .platform-btn .pb-icon { font-size: 16px; }
+  .platform-btn.claude  { border-color: #d97706; }
+  .platform-btn.claude:hover  { background: rgba(217,119,6,0.15); }
+  .platform-btn.chatgpt { border-color: #10b981; }
+  .platform-btn.chatgpt:hover { background: rgba(16,185,129,0.15); }
+  .platform-btn.gemini  { border-color: #3b82f6; }
+  .platform-btn.gemini:hover  { background: rgba(59,130,246,0.15); }
+  .adapt-done {
+    background: rgba(34,197,94,0.12);
+    border: 1px solid rgba(34,197,94,0.3);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 12px;
+    color: #4ade80;
+    font-weight: 600;
+    text-align: center;
+  }
 `;
 
 export function SidePanel({ result, framework, onFrameworkChange, onClose, getText, onSetText }: SidePanelProps) {
   const color = scoreColor(result.score);
   const [selectedTask, setSelectedTask] = useState("auto");
   const [fixed, setFixed] = useState(false);
+  const [adaptedPlatform, setAdaptedPlatform] = useState<string | null>(null);
+
+  function handleAdapt(platform: "claude" | "chatgpt" | "gemini") {
+    const original = getText();
+    const els = result.elements;
+    let adapted = "";
+    if (platform === "claude")   adapted = adaptForClaude(original, els);
+    if (platform === "chatgpt")  adapted = adaptForChatGPT(original, els);
+    if (platform === "gemini")   adapted = adaptForGemini(original, els);
+    onSetText(adapted);
+    setAdaptedPlatform(platform);
+    setTimeout(() => setAdaptedPlatform(null), 3000);
+  }
 
   function handleFix() {
     const original = getText();
@@ -340,6 +453,27 @@ export function SidePanel({ result, framework, onFrameworkChange, onClose, getTe
             )}
           </div>
         )}
+
+        <div className="section">
+          <div className="section-label">Adapt for Platform</div>
+          {adaptedPlatform ? (
+            <div className="adapt-done">
+              ✓ Adapted for {adaptedPlatform === "chatgpt" ? "ChatGPT" : adaptedPlatform.charAt(0).toUpperCase() + adaptedPlatform.slice(1)} — review &amp; send
+            </div>
+          ) : (
+            <div className="platform-grid">
+              <button className="platform-btn claude" onClick={() => handleAdapt("claude")}>
+                <span className="pb-icon">🟠</span>Claude
+              </button>
+              <button className="platform-btn chatgpt" onClick={() => handleAdapt("chatgpt")}>
+                <span className="pb-icon">🟢</span>ChatGPT
+              </button>
+              <button className="platform-btn gemini" onClick={() => handleAdapt("gemini")}>
+                <span className="pb-icon">🔵</span>Gemini
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </>
   );
