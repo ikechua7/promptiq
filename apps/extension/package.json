@@ -7,7 +7,8 @@
     "dev": "vite build --watch",
     "build": "vite build",
     "build:free": "vite build",
-    "build:pro": "VITE_PRO=true vite build"
+    "build:pro": "VITE_PRO=true vite build",
+    "build:ff-pro": "VITE_PRO=true VITE_FF=true vite build"
   },
   "dependencies": {
     "prompt-score": "*",

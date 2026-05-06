@@ -3,6 +3,19 @@ import react from "@vitejs/plugin-react";
 import webExtension from "vite-plugin-web-extension";
 
 const isPro = process.env.VITE_PRO === "true";
+const isFF  = process.env.VITE_FF  === "true";
+
+function getManifest(): string {
+  if (isFF && isPro) return "./manifest.ff.pro.json";
+  if (isPro)         return "./manifest.pro.json";
+  return "./manifest.json";
+}
+
+function getOutDir(): string {
+  if (isFF && isPro) return "dist-ff-pro";
+  if (isPro)         return "dist-pro";
+  return "dist";
+}
 
 export default defineConfig({
   define: {
@@ -11,12 +24,12 @@ export default defineConfig({
   plugins: [
     react(),
     webExtension({
-      manifest: isPro ? "./manifest.pro.json" : "./manifest.json",
+      manifest: getManifest(),
       additionalInputs: ["src/content/index.tsx"],
     }),
   ],
   build: {
-    outDir: isPro ? "dist-pro" : "dist",
+    outDir: getOutDir(),
     emptyOutDir: true,
   },
 });
