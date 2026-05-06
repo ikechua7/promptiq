@@ -21,7 +21,7 @@ interface SidePanelProps {
   getText: () => string;
   onSetText: (text: string) => void;
   paywalled?: boolean;
-  onLicenceActivated?: () => void;
+  onLicenceActivated?: (tier: import("./trialGate.ts").LicenceTier) => void;
 }
 
 // Placeholder map for every element key across all 8 frameworks
@@ -375,7 +375,7 @@ export function SidePanel({ result, framework, onFrameworkChange, onClose, getTe
           <button className="close-btn" onClick={onClose}>×</button>
         </div>
 
-        {paywalled && <Paywall onActivated={() => { onLicenceActivated?.(); onClose(); }} />}
+        {paywalled && <Paywall onActivated={(t) => { onLicenceActivated?.(t); onClose(); }} />}
         {!paywalled && <>
         <div className="task-bar">
           <div className="task-label">What are you working on?</div>

@@ -3,6 +3,7 @@ import { score } from "prompt-score";
 import type { PromptScore } from "prompt-score";
 import { SidePanel } from "./SidePanel.tsx";
 import { getTrialState, isTrialExpired, daysRemaining } from "./trialGate.ts";
+import type { LicenceTier } from "./trialGate.ts";
 
 declare const __PRO__: boolean;
 
@@ -75,6 +76,7 @@ export function FloatingBadge({ getText, setText }: FloatingBadgeProps) {
   const [trialExpired, setTrialExpired] = useState(false);
   const [licensed, setLicensed] = useState(true); // assume licensed until checked
   const [days, setDays] = useState(3);
+  const [tier, setTier] = useState<LicenceTier | null>(null);
 
   useEffect(() => {
     if (typeof __PRO__ !== "undefined" && __PRO__) {
@@ -82,6 +84,7 @@ export function FloatingBadge({ getText, setText }: FloatingBadgeProps) {
         setLicensed(s.licensed);
         setTrialExpired(isTrialExpired(s.installedAt));
         setDays(daysRemaining(s.installedAt));
+        setTier(s.tier);
       });
     }
   }, []);
@@ -151,7 +154,7 @@ export function FloatingBadge({ getText, setText }: FloatingBadgeProps) {
           getText={getText}
           onSetText={setText}
           paywalled={paywalled}
-          onLicenceActivated={() => { setLicensed(true); setTrialExpired(false); }}
+          onLicenceActivated={(t) => { setLicensed(true); setTrialExpired(false); setTier(t); }}
         />
       )}
     </>
