@@ -53,17 +53,19 @@ export async function getTrialState(): Promise<TrialState> {
   return new Promise((resolve) => {
     chrome.storage.local.get(["installedAt", "licensed", "licenceKey", "tier"], (data) => {
       const now = Date.now();
-      if (!data.installedAt) {
-        chrome.storage.local.set({ installedAt: now });
-        resolve({ installedAt: now, licensed: false, licenceKey: "", tier: null });
-      } else {
-        resolve({
-          installedAt:  data.installedAt as number,
-          licensed:     (data.licensed as boolean) ?? false,
-          licenceKey:   (data.licenceKey as string) ?? "",
-          tier:         (data.tier as LicenceTier) ?? null,
-        });
-      }
+      const installedAt =
+        typeof data.installedAt === "number" && isFinite(data.installedAt)
+          ? data.installedAt
+          : now;
+      if (!data.installedAt) chrome.storage.local.set({ installedAt: now });
+      resolve({
+        installedAt,
+        licensed:   data.licensed === true,
+        licenceKey: typeof data.licenceKey === "string" ? data.licenceKey : "",
+        tier:       (["individual","team","business","enterprise"] as LicenceTier[]).includes(data.tier)
+                      ? data.tier as LicenceTier
+                      : null,
+      });
     });
   });
 }

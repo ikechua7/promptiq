@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ALL_FRAMEWORKS } from "prompt-score";
 import type { PromptScore, ElementScore } from "prompt-score";
 import { Paywall } from "./Paywall.tsx";
+import { ConsentNotice } from "./ConsentNotice.tsx";
 
 const TASK_OPTIONS: Array<{ value: string; label: string; framework: string }> = [
   { value: "auto",     label: "Auto-detect",          framework: "auto"   },
@@ -22,6 +23,9 @@ interface SidePanelProps {
   onSetText: (text: string) => void;
   paywalled?: boolean;
   onLicenceActivated?: (tier: import("./trialGate.ts").LicenceTier) => void;
+  consentGiven?: boolean;
+  onConsentAccept?: () => void;
+  onConsentDecline?: () => void;
 }
 
 // Placeholder map for every element key across all 8 frameworks
@@ -333,7 +337,7 @@ const PANEL_STYLES = `
   }
 `;
 
-export function SidePanel({ result, framework, onFrameworkChange, onClose, getText, onSetText, paywalled, onLicenceActivated }: SidePanelProps) {
+export function SidePanel({ result, framework, onFrameworkChange, onClose, getText, onSetText, paywalled, onLicenceActivated, consentGiven, onConsentAccept, onConsentDecline }: SidePanelProps) {
   const color = scoreColor(result.score);
   const [selectedTask, setSelectedTask] = useState("auto");
   const [fixed, setFixed] = useState(false);
@@ -375,8 +379,14 @@ export function SidePanel({ result, framework, onFrameworkChange, onClose, getTe
           <button className="close-btn" onClick={onClose}>×</button>
         </div>
 
-        {paywalled && <Paywall onActivated={(t) => { onLicenceActivated?.(t); onClose(); }} />}
-        {!paywalled && <>
+        {!consentGiven && (
+          <ConsentNotice
+            onAccept={() => onConsentAccept?.()}
+            onDecline={() => onConsentDecline?.()}
+          />
+        )}
+        {consentGiven && paywalled && <Paywall onActivated={(t) => { onLicenceActivated?.(t); onClose(); }} />}
+        {consentGiven && !paywalled && <>
         <div className="task-bar">
           <div className="task-label">What are you working on?</div>
           <select

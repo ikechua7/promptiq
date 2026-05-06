@@ -8,18 +8,28 @@
     "extension_pages": "script-src 'self'; object-src 'none';"
   },
   "host_permissions": [
-    "https://claude.ai/*",
-    "https://chatgpt.com/*",
-    "https://chat.openai.com/*",
-    "https://gemini.google.com/*"
+    "https://claude.ai/",
+    "https://claude.ai/chat/*",
+    "https://claude.ai/new",
+    "https://claude.ai/project/*",
+    "https://chatgpt.com/",
+    "https://chatgpt.com/c/*",
+    "https://chat.openai.com/",
+    "https://chat.openai.com/c/*",
+    "https://gemini.google.com/app/*"
   ],
   "content_scripts": [
     {
       "matches": [
-        "https://claude.ai/*",
-        "https://chatgpt.com/*",
-        "https://chat.openai.com/*",
-        "https://gemini.google.com/*"
+        "https://claude.ai/",
+        "https://claude.ai/chat/*",
+        "https://claude.ai/new",
+        "https://claude.ai/project/*",
+        "https://chatgpt.com/",
+        "https://chatgpt.com/c/*",
+        "https://chat.openai.com/",
+        "https://chat.openai.com/c/*",
+        "https://gemini.google.com/app/*"
       ],
       "js": ["src/content/index.tsx"],
       "run_at": "document_idle"

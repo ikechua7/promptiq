@@ -9,7 +9,7 @@ const SELECTORS: Array<{ sel: string; site: string }> = [
   { sel: ".ql-editor[contenteditable='true'][role='textbox']",site: "gemini" },
   { sel: 'div[contenteditable="true"][role="textbox"]',       site: "generic-rich" },
   { sel: '[contenteditable="true"]:not([tabindex="-1"])',     site: "generic-ce" },
-  { sel: "textarea",                                          site: "generic-textarea" },
+  { sel: 'textarea:not([type="password"]):not([autocomplete="current-password"]):not([autocomplete="new-password"])', site: "generic-textarea" },
 ];
 
 // Selectors that are too broad and would match non-input elements
@@ -19,6 +19,7 @@ const BLOCKLIST = [
 ];
 
 let mounted = false;
+let _shadow: ShadowRoot | null = null;
 
 function isBlocked(el: Element): boolean {
   return BLOCKLIST.some((sel) => el.closest(sel) !== null);
@@ -40,6 +41,17 @@ function getText(el: Element): string {
   return (el as HTMLElement).innerText ?? "";
 }
 
+function sanitisePlainText(text: string): string {
+  return text
+    .replace(/<[^>]*>/g, "")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&nbsp;/g, " ");
+}
+
 function mount() {
   if (mounted) return;
   const target = getPromptEl();
@@ -51,7 +63,8 @@ function mount() {
   host.style.cssText = "position:fixed;bottom:80px;right:20px;z-index:2147483647;";
   document.body.appendChild(host);
 
-  const shadow = host.attachShadow({ mode: "open" });
+  _shadow = host.attachShadow({ mode: "closed" });
+  const shadow = _shadow;
   const mountPoint = document.createElement("div");
   shadow.appendChild(mountPoint);
 
@@ -65,14 +78,14 @@ function mount() {
     const el = getPromptEl();
     if (!el) return;
     if (el instanceof HTMLTextAreaElement || el instanceof HTMLInputElement) {
-      el.value = newText;
+      el.value = sanitisePlainText(newText);
       el.dispatchEvent(new Event("input", { bubbles: true }));
       el.dispatchEvent(new Event("change", { bubbles: true }));
     } else {
       // ProseMirror / contenteditable
       (el as HTMLElement).focus();
       document.execCommand("selectAll");
-      document.execCommand("insertText", false, newText);
+      document.execCommand("insertText", false, sanitisePlainText(newText));
     }
   }
 

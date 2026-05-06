@@ -74,7 +74,9 @@ export function FloatingBadge({ getText, setText }: FloatingBadgeProps) {
 
   // Pro: trial state
   const [trialExpired, setTrialExpired] = useState(false);
-  const [licensed, setLicensed] = useState(true); // assume licensed until checked
+  const [licensed, setLicensed] = useState(false);
+  const [trialLoaded, setTrialLoaded] = useState(false);
+  const [consentGiven, setConsentGiven] = useState(true);
   const [days, setDays] = useState(3);
   const [tier, setTier] = useState<LicenceTier | null>(null);
 
@@ -85,6 +87,15 @@ export function FloatingBadge({ getText, setText }: FloatingBadgeProps) {
         setTrialExpired(isTrialExpired(s.installedAt));
         setDays(daysRemaining(s.installedAt));
         setTier(s.tier);
+        chrome.storage.local.get(["consentGiven"], (d) => {
+          setConsentGiven(d.consentGiven === true);
+          setTrialLoaded(true);
+        });
+      });
+    } else {
+      chrome.storage.local.get(["consentGiven"], (d) => {
+        setConsentGiven(d.consentGiven === true);
+        setTrialLoaded(true);
       });
     }
   }, []);
@@ -116,7 +127,7 @@ export function FloatingBadge({ getText, setText }: FloatingBadgeProps) {
     };
   }, [getText, framework]);
 
-  if (!result) return null;
+  if (!result || !trialLoaded) return null;
 
   const color = gradeColor(result.score);
   const paywalled = typeof __PRO__ !== "undefined" && __PRO__ && trialExpired && !licensed;
@@ -155,6 +166,16 @@ export function FloatingBadge({ getText, setText }: FloatingBadgeProps) {
           onSetText={setText}
           paywalled={paywalled}
           onLicenceActivated={(t) => { setLicensed(true); setTrialExpired(false); setTier(t); }}
+          consentGiven={consentGiven}
+          onConsentAccept={() => {
+            chrome.storage.local.set({ consentGiven: true });
+            setConsentGiven(true);
+          }}
+          onConsentDecline={() => {
+            chrome.storage.local.set({ consentGiven: false });
+            setConsentGiven(false);
+            setOpen(false);
+          }}
         />
       )}
     </>

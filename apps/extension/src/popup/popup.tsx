@@ -24,7 +24,17 @@ function Popup() {
 
   useEffect(() => {
     chrome.storage.local.get("settings", (data) => {
-      if (data.settings) setSettings({ ...DEFAULT_SETTINGS, ...data.settings });
+      if (data.settings) {
+        const s = data.settings;
+        const validFrameworks = new Set(["auto", ...ALL_FRAMEWORKS.map((f: { id: string }) => f.id)]);
+        const validSites = new Set(["claude", "chatgpt", "gemini"]);
+        setSettings({
+          defaultFramework: validFrameworks.has(s.defaultFramework) ? s.defaultFramework : "auto",
+          enabledSites: Array.isArray(s.enabledSites)
+            ? s.enabledSites.filter((x: unknown) => validSites.has(x as string))
+            : DEFAULT_SETTINGS.enabledSites,
+        });
+      }
     });
   }, []);
 
