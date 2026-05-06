@@ -2,6 +2,9 @@ import { useState, useEffect, useRef } from "react";
 import { score } from "prompt-score";
 import type { PromptScore } from "prompt-score";
 import { SidePanel } from "./SidePanel.tsx";
+import { getTrialState, isTrialExpired, daysRemaining } from "./trialGate.ts";
+
+declare const __PRO__: boolean;
 
 interface FloatingBadgeProps {
   getText: () => string;
@@ -42,6 +45,23 @@ const BASE_STYLES = `
     border-radius: 50%;
     flex-shrink: 0;
   }
+  .trial-pill {
+    pointer-events: all;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: #1f2937;
+    border: 1px solid #d97706;
+    border-radius: 999px;
+    padding: 3px 8px;
+    cursor: pointer;
+    font-family: system-ui, sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    color: #fbbf24;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    user-select: none;
+  }
 `;
 
 export function FloatingBadge({ getText, setText }: FloatingBadgeProps) {
@@ -50,6 +70,21 @@ export function FloatingBadge({ getText, setText }: FloatingBadgeProps) {
   const [framework, setFramework] = useState("auto");
   const lastTextRef = useRef<string>("");
   const hasAutoOpenedRef = useRef(false);
+
+  // Pro: trial state
+  const [trialExpired, setTrialExpired] = useState(false);
+  const [licensed, setLicensed] = useState(true); // assume licensed until checked
+  const [days, setDays] = useState(3);
+
+  useEffect(() => {
+    if (typeof __PRO__ !== "undefined" && __PRO__) {
+      getTrialState().then((s) => {
+        setLicensed(s.licensed);
+        setTrialExpired(isTrialExpired(s.installedAt));
+        setDays(daysRemaining(s.installedAt));
+      });
+    }
+  }, []);
 
   useEffect(() => {
     function check() {
@@ -64,10 +99,7 @@ export function FloatingBadge({ getText, setText }: FloatingBadgeProps) {
       setResult(score(text, framework));
     }
 
-    // Poll every 300ms — catches paste, programmatic changes, SPA navigation
     const interval = setInterval(check, 300);
-
-    // Force immediate recheck on these events — no debounce needed
     document.addEventListener("input", check, true);
     document.addEventListener("keyup", check, true);
     document.addEventListener("paste", () => setTimeout(check, 50), true);
@@ -84,19 +116,32 @@ export function FloatingBadge({ getText, setText }: FloatingBadgeProps) {
   if (!result) return null;
 
   const color = gradeColor(result.score);
+  const paywalled = typeof __PRO__ !== "undefined" && __PRO__ && trialExpired && !licensed;
 
   return (
     <>
       <style>{BASE_STYLES}</style>
+
+      {/* Badge — always show score; lock icon when paywalled */}
       <div
         className="badge"
         onClick={() => setOpen((o) => !o)}
-        title={`Prompt score: ${result.score}/100 (${result.grade}) — ${result.framework.name}`}
+        title={paywalled ? "Trial ended — click to upgrade" : `Prompt score: ${result.score}/100 (${result.grade}) — ${result.framework.name}`}
       >
-        <div className="dot" style={{ background: color }} />
-        <span style={{ color }}>{result.score}</span>
-        <span style={{ color: "#9ca3af" }}>{result.grade}</span>
+        <div className="dot" style={{ background: paywalled ? "#6b7280" : color }} />
+        <span style={{ color: paywalled ? "#6b7280" : color }}>
+          {paywalled ? "🔒" : result.score}
+        </span>
+        {!paywalled && <span style={{ color: "#9ca3af" }}>{result.grade}</span>}
       </div>
+
+      {/* Trial days remaining pill */}
+      {typeof __PRO__ !== "undefined" && __PRO__ && !trialExpired && !licensed && (
+        <div className="trial-pill" style={{ marginTop: 6 }} onClick={() => setOpen(true)}>
+          ⏱ {days}d trial
+        </div>
+      )}
+
       {open && (
         <SidePanel
           result={result}
@@ -105,6 +150,8 @@ export function FloatingBadge({ getText, setText }: FloatingBadgeProps) {
           onClose={() => setOpen(false)}
           getText={getText}
           onSetText={setText}
+          paywalled={paywalled}
+          onLicenceActivated={() => { setLicensed(true); setTrialExpired(false); }}
         />
       )}
     </>
