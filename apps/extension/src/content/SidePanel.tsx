@@ -17,6 +17,60 @@ interface SidePanelProps {
   framework: string;
   onFrameworkChange: (id: string) => void;
   onClose: () => void;
+  getText: () => string;
+  onSetText: (text: string) => void;
+}
+
+// Placeholder map for every element key across all 8 frameworks
+const PLACEHOLDERS: Record<string, { prefix?: string; suffix?: string }> = {
+  role:         { prefix: "You are a [role, e.g. senior consultant / expert developer]." },
+  capacity:     { prefix: "You are acting as a [capacity, e.g. research analyst / domain expert]." },
+  background:   { suffix: "Background: [describe the project, situation, or problem]." },
+  context:      { suffix: "Context: [describe the relevant background or situation]." },
+  objective:    { suffix: "Objective: [state clearly what you want to achieve]." },
+  objectives:   { suffix: "Objectives: [list what you want to achieve]." },
+  task:         { suffix: "[Describe the specific task you want done]." },
+  action:       { suffix: "Action: [describe the specific action to take]." },
+  instructions: { suffix: "Instructions: [provide specific step-by-step instructions]." },
+  steps:        { suffix: "Please approach this step by step: First... Then... Finally..." },
+  format:       { suffix: "Format the response as [bullet points / numbered list / table / paragraph]." },
+  response:     { suffix: "Respond in [format, e.g. a structured report with headings]." },
+  style:        { suffix: "Write in a [formal / conversational / technical] style." },
+  tone:         { suffix: "Use a [professional / empathetic / authoritative] tone." },
+  audience:     { suffix: "This is for [your audience, e.g. a non-technical executive / beginner]." },
+  personality:  { suffix: "Adopt the personality of [e.g. a patient teacher / direct advisor]." },
+  goal:         { suffix: "The goal is to [describe the desired outcome]." },
+  endGoal:      { suffix: "End goal: [what success looks like for this task]." },
+  keyResults:   { suffix: "Key results expected: [list measurable outcomes]." },
+  purpose:      { suffix: "Purpose: [explain why this is needed and what it will be used for]." },
+  insight:      { suffix: "Key insight: [share any relevant domain knowledge or context]." },
+  statement:    { suffix: "Problem statement: [clearly define what needs to be solved]." },
+  expectation:  { suffix: "Expected output: [describe exactly what you expect to receive]." },
+  result:       { suffix: "Desired result: [describe what a successful outcome looks like]." },
+  example:      { suffix: "For example: [provide a concrete example of what you mean]." },
+  experiment:   { suffix: "Experiment with: [describe variations or approaches to try]." },
+  evolve:       { suffix: "To iterate: [describe how you would like this refined over time]." },
+  narrowing:    { suffix: "Focus specifically on: [narrow the scope — what to include and exclude]." },
+  constraint:   { suffix: "Constraints: [e.g. under 200 words / avoid jargon / no code examples]." },
+};
+
+function buildImprovedPrompt(originalText: string, missingKeys: string[]): string {
+  const prefixes: string[] = [];
+  const suffixes: string[] = [];
+
+  for (const key of missingKeys) {
+    const p = PLACEHOLDERS[key];
+    if (!p) continue;
+    if (p.prefix) prefixes.push(p.prefix);
+    if (p.suffix) suffixes.push(p.suffix);
+  }
+
+  const parts: string[] = [];
+  if (prefixes.length) parts.push(prefixes.join("\n"));
+  parts.push(originalText.trim());
+  if (suffixes.length) parts.push(suffixes.join("\n"));
+
+  return parts.join("\n\n");
 }
 
 function scoreColor(s: number): string {
@@ -145,11 +199,50 @@ const PANEL_STYLES = `
     width: 100%;
     cursor: pointer;
   }
+  .fix-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    padding: 10px;
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    transition: opacity 0.15s;
+  }
+  .fix-btn:hover { opacity: 0.9; }
+  .fix-btn:active { opacity: 0.8; }
+  .fix-done {
+    background: rgba(34,197,94,0.12);
+    border: 1px solid rgba(34,197,94,0.3);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 12px;
+    color: #4ade80;
+    font-weight: 600;
+    text-align: center;
+  }
 `;
 
-export function SidePanel({ result, framework, onFrameworkChange, onClose }: SidePanelProps) {
+export function SidePanel({ result, framework, onFrameworkChange, onClose, getText, onSetText }: SidePanelProps) {
   const color = scoreColor(result.score);
   const [selectedTask, setSelectedTask] = useState("auto");
+  const [fixed, setFixed] = useState(false);
+
+  function handleFix() {
+    const original = getText();
+    const missingKeys = result.elements.filter((e) => !e.found).map((e) => e.key);
+    const improved = buildImprovedPrompt(original, missingKeys);
+    onSetText(improved);
+    setFixed(true);
+    setTimeout(() => setFixed(false), 3000);
+  }
 
   function handleTaskChange(value: string) {
     setSelectedTask(value);
@@ -235,6 +328,18 @@ export function SidePanel({ result, framework, onFrameworkChange, onClose }: Sid
             ))
           )}
         </div>
+
+        {result.score < 85 && result.elements.some((e) => !e.found) && (
+          <div className="section">
+            {fixed ? (
+              <div className="fix-done">✓ Prompt updated — fill in the [brackets]</div>
+            ) : (
+              <button className="fix-btn" onClick={handleFix}>
+                ✦ Fix My Prompt
+              </button>
+            )}
+          </div>
+        )}
       </div>
     </>
   );

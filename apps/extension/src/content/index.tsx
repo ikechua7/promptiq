@@ -61,7 +61,24 @@ function mount() {
     return el ? getText(el) : "";
   }
 
-  createRoot(mountPoint).render(<FloatingBadge getText={getTextLive} />);
+  function setTextLive(newText: string): void {
+    const el = getPromptEl();
+    if (!el) return;
+    if (el instanceof HTMLTextAreaElement || el instanceof HTMLInputElement) {
+      el.value = newText;
+      el.dispatchEvent(new Event("input", { bubbles: true }));
+      el.dispatchEvent(new Event("change", { bubbles: true }));
+    } else {
+      // ProseMirror / contenteditable
+      (el as HTMLElement).focus();
+      document.execCommand("selectAll");
+      document.execCommand("insertText", false, newText);
+    }
+  }
+
+  createRoot(mountPoint).render(
+    <FloatingBadge getText={getTextLive} setText={setTextLive} />
+  );
 }
 
 function poll() {

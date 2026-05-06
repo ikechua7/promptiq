@@ -5,6 +5,7 @@ import { SidePanel } from "./SidePanel.tsx";
 
 interface FloatingBadgeProps {
   getText: () => string;
+  setText: (text: string) => void;
 }
 
 function gradeColor(s: number): string {
@@ -43,7 +44,7 @@ const BASE_STYLES = `
   }
 `;
 
-export function FloatingBadge({ getText }: FloatingBadgeProps) {
+export function FloatingBadge({ getText, setText }: FloatingBadgeProps) {
   const [result, setResult] = useState<PromptScore | null>(null);
   const [open, setOpen] = useState(false);
   const [framework, setFramework] = useState("auto");
@@ -102,6 +103,8 @@ export function FloatingBadge({ getText }: FloatingBadgeProps) {
           framework={framework}
           onFrameworkChange={setFramework}
           onClose={() => setOpen(false)}
+          getText={getText}
+          onSetText={setText}
         />
       )}
     </>
