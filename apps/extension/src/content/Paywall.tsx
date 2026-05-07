@@ -11,7 +11,7 @@ const CHECKOUT: Record<string, string> = {
   business_monthly:   "https://promptiq.lemonsqueezy.com/buy/business-monthly",
   business_yearly:    "https://promptiq.lemonsqueezy.com/buy/business-yearly",
 };
-const ENTERPRISE_EMAIL = "mailto:hello@usepromptiq.com?subject=PromptIQ%20Enterprise";
+const ENTERPRISE_EMAIL = "mailto:hello@redotdigital.com?subject=PromptIQ%20Enterprise";
 
 const PAYWALL_STYLES = `
   * { box-sizing: border-box; margin: 0; padding: 0; }

@@ -7,7 +7,7 @@
 
 ## 1. Who we are
 
-PromptIQ Pro ("we", "us", "our") is a browser extension developed and operated by Isaiah Chua. Contact: hello@usepromptiq.com
+PromptIQ Pro ("we", "us", "our") is a browser extension developed and operated by Isaiah Chua. Contact: hello@redotdigital.com
 
 ---
 
@@ -46,7 +46,7 @@ We receive from Lemon Squeezy only: your email address, your licence key, and yo
 
 ### 3c. Website analytics
 
-Our marketing website (usepromptiq.com) may use privacy-preserving analytics (no cookies, no fingerprinting). No analytics are run inside the extension itself.
+Our marketing website (redotdigital.com) may use privacy-preserving analytics (no cookies, no fingerprinting). No analytics are run inside the extension itself.
 
 ---
 
@@ -93,7 +93,7 @@ Depending on your jurisdiction, you may have the right to:
 - Request deletion of your account and associated data
 - Object to processing
 
-To exercise any right, email hello@usepromptiq.com. We will respond within 30 days.
+To exercise any right, email hello@redotdigital.com. We will respond within 30 days.
 
 **To delete all on-device data immediately:** uninstall PromptIQ Pro from your browser. All local storage is removed automatically.
 
@@ -117,5 +117,5 @@ We will update the effective date at the top of this page when changes are made.
 ## 11. Contact
 
 Isaiah Chua  
-hello@usepromptiq.com  
-https://usepromptiq.com
+hello@redotdigital.com  
+https://redotdigital.com

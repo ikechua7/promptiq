@@ -101,7 +101,7 @@ function Popup() {
       </div>
 
       <a
-        href="https://usepromptiq.com"
+        href="https://redotdigital.com"
         target="_blank"
         rel="noreferrer"
         style={{ fontSize: 12, color: "#6366f1", textDecoration: "none", textAlign: "center", paddingTop: 4 }}

@@ -4,7 +4,7 @@
 
 ### Added
 - **Chrome Web Store listing** (`store-assets/STORE_LISTING.md`) — full store copy: short description (97 chars), complete feature description, framework comparison table, privacy statement, pricing tiers, and image asset checklist.
-- **Privacy Policy** (`store-assets/PRIVACY_POLICY.md`) — full policy for hosting at `usepromptiq.com/privacy`. Covers on-device processing, Lemon Squeezy payment data handling, permissions rationale, data retention periods, and user rights (GDPR/CCPA). Required before Chrome Web Store submission.
+- **Privacy Policy** (`store-assets/PRIVACY_POLICY.md`) — full policy for hosting at `redotdigital.com/privacy`. Covers on-device processing, Lemon Squeezy payment data handling, permissions rationale, data retention periods, and user rights (GDPR/CCPA). Required before Chrome Web Store submission.
 - **Store screenshot** (`store-assets/screenshot-1280x800.png`) — extension screenshot resized to Chrome Web Store specification (1280×800).
 
 ---
@@ -24,7 +24,7 @@
 ## [1.2.0] — 2026-05-07
 
 ### Added
-- **Firefox Pro build** — `manifest.ff.pro.json` with `browser_specific_settings.gecko` (extension ID `promptiq-pro@usepromptiq.com`, `strict_min_version: "109.0"` — first Firefox MV3 stable release). Packaged as `promptiq-pro-FF.zip`.
+- **Firefox Pro build** — `manifest.ff.pro.json` with `browser_specific_settings.gecko` (extension ID `promptiq-pro@redotdigital.com`, `strict_min_version: "109.0"` — first Firefox MV3 stable release). Packaged as `promptiq-pro-FF.zip`.
 - `build:ff-pro` npm script (`VITE_PRO=true VITE_FF=true vite build`).
 - `dist-ff-pro/` output directory.
 

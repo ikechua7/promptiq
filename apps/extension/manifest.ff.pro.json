@@ -5,7 +5,7 @@
   "description": "Score, fix, and adapt your AI prompts across Claude, ChatGPT, and Gemini.",
   "browser_specific_settings": {
     "gecko": {
-      "id": "promptiq-pro@usepromptiq.com",
+      "id": "promptiq-pro@redotdigital.com",
       "strict_min_version": "109.0"
     }
   },

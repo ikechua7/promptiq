@@ -77,4 +77,4 @@ No data leaves your browser. No account required. No API key. Scoring runs entir
 
 ## Feedback
 
-Found a bug or a prompt that scores wrong? Open an issue or visit [usepromptiq.com](http://usepromptiq.com).
+Found a bug or a prompt that scores wrong? Open an issue or visit [redotdigital.com](http://redotdigital.com).

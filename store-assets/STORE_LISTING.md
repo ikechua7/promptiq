@@ -73,7 +73,7 @@ Type your prompt in Claude, ChatGPT, or Gemini. A score badge appears instantly 
 
 No data leaves your browser. All scoring runs entirely on-device using pattern matching — no API calls, no server, no account required to try. Your prompts are never stored, logged, or transmitted.
 
-Read our full privacy policy at: https://usepromptiq.com/privacy
+Read our full privacy policy at: https://redotdigital.com/privacy
 
 ---
 
@@ -84,7 +84,7 @@ Read our full privacy policy at: https://usepromptiq.com/privacy
 After trial: US$3.99/month or US$29/year.
 Team (5 seats): US$29/month.
 Business (20 seats): US$79/month.
-Enterprise: contact hello@usepromptiq.com
+Enterprise: contact hello@redotdigital.com
 
 ---
 
