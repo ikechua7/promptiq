@@ -16,6 +16,18 @@ Score your AI prompts in real time against 8 expert frameworks. Fix weak prompts
 
 Most people get poor AI responses because their prompts are vague, missing context, or structurally weak. PromptIQ Pro scores your prompt in real time — before you hit send — and tells you exactly what's missing.
 
+Whether you're a professional, a student, or an educator teaching AI literacy — PromptIQ Pro shows you what a strong prompt looks like, one score at a time.
+
+---
+
+**Who it's for**
+
+👔 **Professionals** — Get better AI outputs first time. No more back-and-forth with vague prompts.
+
+🎓 **Students & Teens** — Build real prompt literacy. See instantly why "write me an essay" scores an F — and how to fix it.
+
+🏫 **Educators** — Teach AI literacy visually. Use live scoring to show students exactly what separates a weak prompt from a strong one.
+
 ---
 
 **How it works**

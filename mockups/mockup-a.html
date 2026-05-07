@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Redot Digital — Option A: Minimal / Japanese</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Inter:wght@300;400;500&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --ink: #1a1a1a;
+    --muted: #888;
+    --border: #e8e8e8;
+    --bg: #fafaf8;
+    --accent: #c0392b;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    font-weight: 300;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  /* NAV */
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 28px 64px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 300;
+    letter-spacing: 0.08em;
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .logo span {
+    color: var(--accent);
+  }
+
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 40px;
+  }
+
+  nav ul a {
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  nav ul a:hover { color: var(--ink); }
+
+  /* HERO */
+  .hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 88vh;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .hero-left {
+    padding: 80px 64px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-right: 1px solid var(--border);
+  }
+
+  .kicker {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 28px;
+  }
+
+  .hero-left h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 56px;
+    font-weight: 300;
+    line-height: 1.15;
+    margin-bottom: 28px;
+    color: var(--ink);
+  }
+
+  .hero-left h1 em {
+    font-style: italic;
+    color: var(--muted);
+  }
+
+  .hero-left p {
+    font-size: 16px;
+    color: var(--muted);
+    max-width: 420px;
+    margin-bottom: 48px;
+    line-height: 1.8;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--ink);
+    color: white;
+    padding: 14px 28px;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background 0.2s;
+    width: fit-content;
+  }
+
+  .btn-primary:hover { background: #333; }
+
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--muted);
+    padding: 14px 0;
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    margin-left: 24px;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .btn-ghost:hover { color: var(--ink); border-color: var(--ink); }
+
+  .hero-right {
+    padding: 80px 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+  }
+
+  /* Score card mockup */
+  .score-card {
+    width: 340px;
+    background: #111;
+    border-radius: 16px;
+    padding: 28px;
+    color: white;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.15);
+  }
+
+  .score-card .label {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #666;
+    margin-bottom: 20px;
+  }
+
+  .score-ring {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 24px;
+  }
+
+  .ring {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: conic-gradient(#22c55e 0% 78%, #2a2a2a 78% 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .ring::after {
+    content: '';
+    position: absolute;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: #111;
+  }
+
+  .ring-num {
+    position: relative;
+    z-index: 1;
+    font-size: 20px;
+    font-weight: 500;
+  }
+
+  .score-text h3 {
+    font-size: 22px;
+    font-weight: 400;
+    margin-bottom: 4px;
+  }
+
+  .score-text p {
+    font-size: 12px;
+    color: #888;
+  }
+
+  .checklist {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .check-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: #ccc;
+  }
+
+  .check-item .dot {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    flex-shrink: 0;
+  }
+
+  .dot.pass { background: #166534; color: #22c55e; }
+  .dot.fail { background: #7f1d1d; color: #ef4444; }
+
+  /* DIVIDER */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 48px 64px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .divider-line { flex: 1; height: 1px; background: var(--border); }
+
+  .divider-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 18px;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  /* FEATURES */
+  .features {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .feature {
+    padding: 56px 48px;
+    border-right: 1px solid var(--border);
+  }
+
+  .feature:last-child { border-right: none; }
+
+  .feature-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px;
+    font-weight: 300;
+    color: var(--border);
+    line-height: 1;
+    margin-bottom: 20px;
+  }
+
+  .feature h3 {
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 12px;
+    color: var(--ink);
+  }
+
+  .feature p {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+
+  /* FRAMEWORKS */
+  .frameworks {
+    padding: 80px 64px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-label {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 48px;
+  }
+
+  .fw-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+
+  .fw-item {
+    background: var(--bg);
+    padding: 28px 24px;
+    transition: background 0.2s;
+  }
+
+  .fw-item:hover { background: white; }
+
+  .fw-name {
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+  }
+
+  .fw-desc {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  /* PRICING */
+  .pricing {
+    padding: 80px 64px;
+    background: white;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .pricing h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 40px;
+    font-weight: 300;
+    margin-bottom: 8px;
+  }
+
+  .pricing > p {
+    color: var(--muted);
+    margin-bottom: 48px;
+  }
+
+  .price-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+
+  .price-card {
+    background: white;
+    padding: 40px 32px;
+  }
+
+  .price-card.featured {
+    background: var(--ink);
+    color: white;
+  }
+
+  .plan-name {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+
+  .price-card.featured .plan-name { color: #888; }
+
+  .price-amount {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px;
+    font-weight: 300;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .price-period {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 28px;
+  }
+
+  .price-card.featured .price-period { color: #666; }
+
+  .price-features {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 32px;
+  }
+
+  .price-features li {
+    font-size: 13px;
+    color: var(--muted);
+    padding-left: 16px;
+    position: relative;
+  }
+
+  .price-features li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--border);
+  }
+
+  .price-card.featured .price-features li { color: #aaa; }
+
+  .price-btn {
+    display: block;
+    text-align: center;
+    padding: 12px;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: 1px solid var(--border);
+    color: var(--ink);
+    transition: all 0.2s;
+  }
+
+  .price-card.featured .price-btn {
+    border-color: #444;
+    color: white;
+  }
+
+  .price-btn:hover {
+    background: var(--ink);
+    color: white;
+    border-color: var(--ink);
+  }
+
+  .price-card.featured .price-btn:hover {
+    background: white;
+    color: var(--ink);
+  }
+
+  /* PRIVACY BAND */
+  .privacy-band {
+    padding: 40px 64px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 32px;
+  }
+
+  .privacy-icon {
+    font-size: 28px;
+    flex-shrink: 0;
+  }
+
+  .privacy-band h3 {
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+
+  .privacy-band p {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 40px 64px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  footer .logo {
+    font-size: 18px;
+  }
+
+  footer p {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  footer a {
+    font-size: 12px;
+    color: var(--muted);
+    text-decoration: none;
+  }
+
+  footer a:hover { color: var(--ink); }
+
+  .footer-links {
+    display: flex;
+    gap: 24px;
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">Redot<span>·</span>Digital</a>
+  <ul>
+    <li><a href="#">Products</a></li>
+    <li><a href="#">Pricing</a></li>
+    <li><a href="#">Privacy</a></li>
+    <li><a href="#">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <p class="kicker">PromptIQ Pro</p>
+    <h1>Write prompts that <em>actually</em> work.</h1>
+    <p>Score your AI prompt against 8 proven frameworks before you hit send. Fix what's missing in one click. Works on Claude, ChatGPT, and Gemini.</p>
+    <div>
+      <a href="#" class="btn-primary">Add to Chrome — Free Trial →</a>
+      <a href="#" class="btn-ghost">See how it works</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="score-card">
+      <div class="label">PromptIQ Pro · COSTAR Framework</div>
+      <div class="score-ring">
+        <div class="ring"><span class="ring-num">78</span></div>
+        <div class="score-text">
+          <h3>Grade B</h3>
+          <p>Good prompt — improvable</p>
+        </div>
+      </div>
+      <div class="checklist">
+        <div class="check-item"><div class="dot pass">✓</div> Role detected</div>
+        <div class="check-item"><div class="dot pass">✓</div> Context present</div>
+        <div class="check-item"><div class="dot pass">✓</div> Task clear</div>
+        <div class="check-item"><div class="dot fail">✗</div> Format not specified</div>
+        <div class="check-item"><div class="dot fail">✗</div> Audience missing</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DIVIDER -->
+<div class="divider">
+  <div class="divider-line"></div>
+  <div class="divider-text">Crafted for people who use AI seriously</div>
+  <div class="divider-line"></div>
+</div>
+
+<!-- FEATURES -->
+<section class="features">
+  <div class="feature">
+    <div class="feature-num">01</div>
+    <h3>Real-time scoring</h3>
+    <p>Score updates as you type. No button to click, no waiting. See your grade before you send.</p>
+  </div>
+  <div class="feature">
+    <div class="feature-num">02</div>
+    <h3>Fix My Prompt</h3>
+    <p>One click rewrites your prompt with bracketed placeholders for every missing element.</p>
+  </div>
+  <div class="feature">
+    <div class="feature-num">03</div>
+    <h3>Platform Adapter</h3>
+    <p>Rewrites your prompt in the optimal style for Claude, ChatGPT, or Gemini automatically.</p>
+  </div>
+</section>
+
+<!-- FRAMEWORKS -->
+<section class="frameworks">
+  <div class="section-label">8 Proven Frameworks</div>
+  <div class="fw-grid">
+    <div class="fw-item"><div class="fw-name">COSTAR</div><div class="fw-desc">Creative & detailed prompts</div></div>
+    <div class="fw-item"><div class="fw-name">RTF</div><div class="fw-desc">Quick, focused prompts</div></div>
+    <div class="fw-item"><div class="fw-name">RISEN</div><div class="fw-desc">Coding & technical tasks</div></div>
+    <div class="fw-item"><div class="fw-name">CRISPE</div><div class="fw-desc">Research & analysis</div></div>
+    <div class="fw-item"><div class="fw-name">APE</div><div class="fw-desc">Explanations</div></div>
+    <div class="fw-item"><div class="fw-name">CARE</div><div class="fw-desc">Business outcomes</div></div>
+    <div class="fw-item"><div class="fw-name">TAG</div><div class="fw-desc">One-liners</div></div>
+    <div class="fw-item"><div class="fw-name">BROKE</div><div class="fw-desc">Strategy & planning</div></div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing">
+  <div class="section-label">Pricing</div>
+  <h2>Simple, transparent pricing.</h2>
+  <p>3-day free trial. No credit card required.</p>
+  <div class="price-grid">
+    <div class="price-card">
+      <div class="plan-name">Individual</div>
+      <div class="price-amount">$3.99</div>
+      <div class="price-period">per month</div>
+      <ul class="price-features">
+        <li>All 8 frameworks</li>
+        <li>Fix My Prompt</li>
+        <li>Platform Adapter</li>
+        <li>Claude, ChatGPT, Gemini</li>
+      </ul>
+      <a href="#" class="price-btn">Start Free Trial</a>
+    </div>
+    <div class="price-card featured">
+      <div class="plan-name">Team</div>
+      <div class="price-amount">$29</div>
+      <div class="price-period">per month · 5 seats</div>
+      <ul class="price-features">
+        <li>Everything in Individual</li>
+        <li>5 team licences</li>
+        <li>Priority support</li>
+      </ul>
+      <a href="#" class="price-btn">Get Team Plan</a>
+    </div>
+    <div class="price-card">
+      <div class="plan-name">Business</div>
+      <div class="price-amount">$79</div>
+      <div class="price-period">per month · 20 seats</div>
+      <ul class="price-features">
+        <li>Everything in Team</li>
+        <li>20 team licences</li>
+        <li>Dedicated support</li>
+      </ul>
+      <a href="#" class="price-btn">Get Business Plan</a>
+    </div>
+  </div>
+</section>
+
+<!-- PRIVACY BAND -->
+<div class="privacy-band">
+  <div class="privacy-icon">🔒</div>
+  <div>
+    <h3>Your prompts never leave your browser.</h3>
+    <p>All scoring runs locally using pattern matching — no API calls, no server, no account required to try. Zero data transmitted.</p>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#" class="logo">Redot<span>·</span>Digital</a>
+  <p>© 2026 Redot Digital. Built in Singapore.</p>
+  <div class="footer-links">
+    <a href="#">Privacy Policy</a>
+    <a href="#">hello@redotdigital.com</a>
+  </div>
+</footer>
+
+</body>
+</html>
